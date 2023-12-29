@@ -57,4 +57,42 @@ function drawPose(pose) {
     }
 }
 
+function displayEmotion() {
+    let highestEmotion = "";
+    let highestPercentage = -1;
+
+    // Iterate through the predictions to find the emotion with the highest percentage
+    for (let i = 0; i < maxPredictions; i++) {
+        const prediction = parseFloat(labelContainer.childNodes[i].innerText.split(": ")[1]);
+        if (prediction > highestPercentage) {
+            highestPercentage = prediction;
+            highestEmotion = labelContainer.childNodes[i].innerText.split(": ")[0];
+        }
+    }
+
+    // Display the dominant emotion
+    if (highestEmotion !== "") {
+        document.getElementById("emotionResult").innerText = `You are ${highestEmotion}`;
+    } else {
+        document.getElementById("emotionResult").innerText = "Unable to determine the dominant emotion.";
+    }
+}
+
+let isDetectionRunning = true;
+
+function stopDetection() {
+    isDetectionRunning = false;
+    document.getElementById("popup").style.display = "block";
+    document.getElementById("emotionResult").style.display = "none"; // Hide the emotion result
+}
+
+// Redirect to the popup after 2 seconds of stopping detection
+setTimeout(function () {
+    if (!isDetectionRunning) {
+        document.getElementById("popup").style.display = "block";
+        document.getElementById("emotionResult").style.display = "none"; // Hide the emotion result
+    }
+}, 2000);
+
+
 init();
